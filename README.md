@@ -48,10 +48,6 @@ A Discord bot for managing osu! profiles and linking them to Discord accounts. T
 - Use `!sheet` to display the link to the tournament history sheet.
 - Use `!commands` to list all available commands.
 
-## Contributing
-
-Contributions are welcome! If you have suggestions for improvements or new features, please create an issue or submit a pull request.
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
