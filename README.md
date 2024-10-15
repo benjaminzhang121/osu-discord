@@ -87,7 +87,7 @@ A Discord bot for managing osu! profiles and linking them to Discord accounts. T
 
 5. **Run the bot**:
    ```bash
-   python bot.py  # Replace with your bot's filename if it's different
+   python osu!bot.py  # Replace with your bot's filename if it's different
    ```
 
 ## Usage
