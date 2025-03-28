@@ -41,6 +41,7 @@ async def fetch_osu_profile(username):
             return None, None
 
 @bot.command(name='link')
+@commands.cooldown(1, 30, commands.BucketType.user)
 async def link(ctx, username: str):
     profile_link, valid_username = await fetch_osu_profile(username)
     if profile_link:
@@ -61,6 +62,7 @@ async def link(ctx, username: str):
         await ctx.send(f'{ctx.author.mention}, osu! profile for username "{username}" not found. Please check the username and try again.')
 
 @bot.command(name='unlink')
+@commands.cooldown(1, 60, commands.BucketType.user)
 async def unlink(ctx):
     user_id = ctx.author.id
     async with aiosqlite.connect('osu_profiles.db') as db:
@@ -69,6 +71,7 @@ async def unlink(ctx):
     await ctx.send(f'{ctx.author.mention}, your osu! profile has been unlinked.')
 
 @bot.command(name='osu')
+@commands.cooldown(1, 5, commands.BucketType.user)
 async def osu(ctx):
     user_id = ctx.author.id
     async with aiosqlite.connect('osu_profiles.db') as db:
@@ -82,6 +85,7 @@ async def osu(ctx):
                 await ctx.send(f'{ctx.author.mention}, you have not linked your osu! profile yet. Use `!link <osu_username>` to link it.')
 
 @bot.command(name='sheet')
+@commands.cooldown(1, 5, commands.BucketType.user)
 async def sheet(ctx):
     embed = discord.Embed(title='Google Sheet', description=f'[Click here to view the sheet]({google_sheet_link})', color=discord.Color.blue())
     await ctx.send(embed=embed)
@@ -98,6 +102,15 @@ async def commands_list(ctx):
     embed.add_field(name='!link <osu_username>', value='Links your osu! profile to your Discord account.', inline=False)
     embed.add_field(name='!osu', value='Displays a link to your linked osu! profile.', inline=False)
     await ctx.send(embed=embed)
+
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandOnCooldown):
+        await ctx.send(f"Command on cooldown. Try again in {error.retry_after:.1f} seconds.", delete_after=10)
+    elif isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send("Missing required argument.", delete_after=10)
+    else:
+        print(f"Error in {ctx.command}: {error}")
 
 # Run the bot with your token
 bot.run('YOUR_BOT_TOKEN')  # Replace with your actual bot token
